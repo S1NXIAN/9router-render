@@ -3,13 +3,18 @@ services:
     name: 9router
     runtime: docker
     region: singapore
-    plan: starter
+    plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
-    disk:
-      name: 9router-data
-      mountPath: /app/data
-      sizeGB: 1
+    # No persistent disk: Free web services cannot attach disks
+    # (Render docs: "Free web services cannot" preserve the filesystem).
+    # /app/data works but is ephemeral — spins down after 15 min idle
+    # and loses local changes on restart/redeploy. For persistence,
+    # switch plan to starter (or higher) and add:
+    #   disk:
+    #     name: 9router-data
+    #     mountPath: /app/data
+    #     sizeGB: 1
     envVars:
       # Prompts for a value in the Render Dashboard on first deploy.
       # Used as the dashboard login password when no saved hash exists.
