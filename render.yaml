@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: 9router
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    disk:
+      name: 9router-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      # Prompts for a value in the Render Dashboard on first deploy.
+      # Used as the dashboard login password when no saved hash exists.
+      - key: INITIAL_PASSWORD
+        sync: false
+      # Auto-generated signing secret for dashboard session cookies.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATA_DIR
+        value: /app/data
+      - key: NODE_ENV
+        value: production
+      - key: API_KEY_SECRET
+        generateValue: true
+      - key: MACHINE_ID_SALT
+        generateValue: true
